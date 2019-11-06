@@ -1,0 +1,76 @@
+
+
+
+
+/*Test program for cricket hardware
+ * Nov. 4, 2019
+ * program tests hardware functions of LEDs and Button pressses
+ * Red Led wired to PA3/ADC3 -----CODED AS: A3
+ * green led wired to PA4/ADC4 -----CODED AS: A0
+ * button1 wired to PA5 -----CODED AS: A1
+ * button2 wired to PA2 -----CODED AS: A2
+
+*/
+//#include "armv6m.h"
+//#include "stm32l0_gpio.h"
+#include <STM32L0.h>
+
+//definitions for hardware
+
+
+#define button1 A1 //change all to valid numbers
+#define button2 A2
+#define redLed A3
+#define greenLed A0
+
+//global variables
+
+char button1status = 0;
+char button2status = 0;
+
+void setup() {
+  // put your setup code here, to run once:
+
+
+pinMode(button1, INPUT);
+pinMode(button2, INPUT);
+
+pinMode(redLed, OUTPUT);
+pinMode(greenLed, OUTPUT);
+
+digitalWrite (redLed, LOW);
+digitalWrite (greenLed, LOW);
+
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+
+// listen to button presses, then light some LEDs
+
+button1status = digitalRead(button1);
+button2status = digitalRead(button2);
+
+if (button1status ==1)
+
+{
+  digitalWrite(redLed, HIGH);
+}
+
+else
+{
+  digitalWrite(redLed, LOW);
+}
+
+if (button2status ==1)
+
+{
+  digitalWrite(greenLed, HIGH);
+}
+
+else
+{
+  digitalWrite(greenLed, LOW);
+}
+
+} //end of void loop
