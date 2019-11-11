@@ -8,8 +8,17 @@
 
 
 
+
 #include "LoRaRadio.h"
-#include "STM32LowPower.h"
+
+//#include "STM32LowPower.h"
+
+#define SW1 A5 
+#define SW2 A2
+#define RLED A3
+#define GLED A4
+
+
 
 #define Address 2       //Address can be set to 0-4 for different Crickets.
 
@@ -29,24 +38,38 @@ int Mode = 0;
 
 void setup() 
 {
-  Serial.begin(9600);
-  LoRaRadio.begin(915000000);
 
-  LoRaRadio.setFrequency(915000000);
-  LoRaRadio.setTxPower(14);
-  LoRaRadio.setBandwidth(LoRaRadio.BW_125);
-  LoRaRadio.setSpreadingFactor(LoRaRadio.SF_7);
-  LoRaRadio.setCodingRate(LoRaRadio.CR_4_5);
-  LoRaRadio.setLnaBoost(true);
+LoRaRadio.begin(915000000);
+LoRaRadio.setFrequency(915000000);
+LoRaRadio.setTxPower(14);
+LoRaRadio.setBandwidth(LoRaRadio.BW_125);
+LoRaRadio.setSpreadingFactor(LoRaRadio.SF_7);
+LoRaRadio.setCodingRate(LoRaRadio.CR_4_5);
+LoRaRadio.setLnaBoost(true);
+
+pinMode(SW1, INPUT);
+pinMode(SW2, INPUT);
+
+pinMode(RLED, OUTPUT);
+pinMode(GLED, OUTPUT);
+
+digitalWrite (RLED, LOW);
+digitalWrite (GLED, LOW);
   
 
 }
 
 void loop() 
 {
-  LowPower.begin();
-  ButtonCheck();
-  delay(3000);
+  //LowPower.begin();
+  //ButtonCheck();
+//BuildPacket();
+digitalWrite(GLED, HIGH);
+delay(2000);
+digitalWrite(GLED, LOW);
+delay(2000);
+
+  
   /*
     switch (Mode)
     {
@@ -169,14 +192,18 @@ void SendPacket(char SendingPacket[])         //Function that sends the built pa
   }
   LoRaRadio.endPacket(true);
   delay(100);
-  LoRaRadio.receive(1000);                                            //Listens for a response for a Bat.
+  LoRaRadio.receive(1000);  //Listens for a response for a Bat.
+
+
+  
+  LoRaRadio.receive(1000); 
   if(LoRaRadio.parsePacket() == 1 && LoRaRadio.read() == 'A')         //Changes to Alarm mode if it hears from a Bat.
   {
     Mode = Alarm;
   }
   else
   {
-    
+   
   }
 
   
