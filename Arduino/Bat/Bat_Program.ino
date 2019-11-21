@@ -71,7 +71,7 @@ void loop( void )
               if(Info[0] == 0 && Info[1] == 1 && Info[2] == 0)
               {
                 LoRaRadio.beginPacket();
-                LoRaRadio.write('a');
+                LoRaRadio.write('A');
                 LoRaRadio.endPacket();
               } 
               Wire.onRequest(SendData);   
