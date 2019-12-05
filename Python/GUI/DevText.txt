@@ -1,0 +1,1 @@
+Device List content will be filled with device ID and corresponding RSSI (if available)

@@ -1,0 +1,4 @@
+﻿		Using the Bat
+
+The Bat is SARNet’s handheld tracking device isused to locate Cricket(s) of interest. The Bat is equipped with a DF antenna to orientate the user towards the direction of the Cricket’s    signal source.
+
