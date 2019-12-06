@@ -11,8 +11,8 @@ import time
 btnPadYhome = 70
 btnPadY = 10
 wPadX = 10
-devIDMain = " "
 refreshFlag = False
+#devIDMain = ""
 
 
 def raise_frame(frame):
@@ -59,35 +59,51 @@ def sweep_End():
     sweepFlagEnd.close()
     print('Close sweepFlag')
 
-def tracking_check():
-    if TrackingFlag == 1:
-        after(500, track_ID)
-    elif TrackFlag == 0:
-        pass
-    
-def track_ID():
+def track_pressed():
+    global devIDMain
+    global TrackingFlag
+    print('Entered track_pressed()')
+    devIDMain = DevList.get(DevList.curselection())
+    print('devIDMain Value: ',devIDMain)
     TrackingFlag = 1
+    track_ID(devIDMain)
+
+def tracking_check():
+    print('Entered tracking_check()')
+    if TrackingFlag == 1:
+        print('Tracking Flag Checkpoint(T): ',TrackingFlag)
+        track_ID(devIDMain)
+    else:
+        print('Tracking Flag Checkpoint(F): ',TrackingFlag)
+    
+def track_ID(devIDMain):
+    print('Entered track_ID')
+    #print('TrackingFlag: ',TrackingFlag)
+
     #devIDMain = DevList.curselection()
     #CurTrackID_Home = Label(HomePage, text=devIDMain).grid(row=0, column=1, sticky='W')
-    
-    devIDMain = DevList.get(DevList.curselection())
+
+    """devIDMain = DevList.get(DevList.curselection())
     print('Selecting Dev ID')
+    """
     
-    print(devIDMain)
     devIDMain = devIDMain[:-1]
+    print(devIDMain)
+    
     #RSSI_file = open('/mnt/GUI/RSSIuseR_'+devIDMain+'.txt', 'w+')
     RSSI_file = open('/home/pi/Documents/SARNet/GUI/RSSIuser_'+devIDMain+'.txt')
     RSSIread = RSSI_file.readline()
     RSSI_file.close()
     
     RSSILength = len(RSSIread)
-    if RSSILength == 2:
-        newLength = RSSILength+1
-        RSSIread = RSSIread.ljust(newLength)
-    elif RSSILength == 1:
+    
+    if RSSILength == 3:
         newLength = RSSILength+2
         RSSIread = RSSIread.ljust(newLength)
         
+    elif RSSILength == 2:
+        newLength = RSSILength+4
+        RSSIread = RSSIread.ljust(newLength)
     
     print('Opening activeDevID file')
     #actDevID_file = open('/mnt/GUI/active')
@@ -100,7 +116,9 @@ def track_ID():
 
     CurTrackID_Home = ttk.Label(fHomeRead, text=str(devIDMain)).grid(row=0, column=1, sticky='WE')
     CurTrackID_Swp = ttk.Label(fSwpRead, text=devIDMain).grid(row=0, column=0, sticky='WE')    
-    CurTrackID_Dev = ttk.Label(fDevRead, text=devIDMain).grid(row=0, column=0, sticky='WE')
+    CurTrackID_Dev.configure(text=devIDMain)
+    CurTrackID_Dev.update()
+    #CurTrackID_Dev = ttk.Label(fDevRead, text=devIDMain).grid(row=0, column=0, sticky='WE')
     CurTrackID_Set = ttk.Label(fSetRead, text=devIDMain).grid(row=0, column=0, sticky='WE')
     CurRSSI_Home = ttk.Label(fHomeRead, text=str(RSSIread)).grid(row=1, column=1, sticky='SE')
     CurRSSI_Swp = ttk.Label(fSwpRead, text=RSSIread).grid(row=1, column=0, sticky='W')
@@ -108,18 +126,24 @@ def track_ID():
     CurRSSI_Set = ttk.Label(fSetRead, text=RSSIread).grid(row=1, column=0, sticky='W')
 
     #lHomeTrack.configure(text=('Tracking: '+devIDMain))
-"""
+    """
     CurRSSI_Home = Label(fHomeRead, text=str(RSSI_read)).grid(row=1, column=1, sticky='E')
     CurRSSI_Dev = Label(fDevRead, text=RSSI_read).grid(row=1, column=1, sticky='W')
-"""
-
+    """
+    win.after(100, tracking_check)
+    #tracking_check()
+    print('End of track_ID: ',TrackingFlag)
+    
 def clear_ID():
-    TrackingFlag = 1
+    TrackingFlag = 0
+    print('Entered clear_ID()')
+    print('Tracking Flag clear_ID Checkpoint: ',TrackingFlag)
+    """
     CurTrackID_Home.configure(text='   ')
     CurTrackID_Dev.configure(text='   ')
     CurRSSI_Home.configure(text='    ')
     CurRSSI_Dev.configure(text='    ')
-    
+    """
 def dark_theme():
     #win = themed_tk.ThemedTk()
     #win.get_themes()
@@ -169,7 +193,7 @@ win  = themed_tk.ThemedTk()
 win.get_themes()
 win.set_theme("scidblue")
 win.geometry('500x448+-10+0')
-win.wm_attributes('-type','splash')
+#win.wm_attributes('-type','splash')
 
 print(ttk.Style().theme_names())
 
@@ -315,6 +339,9 @@ ttk.Label(DeviceList, text='Device List').grid(row=0, column=1)
 ttk.Label(fDevTrack, text='Tracking: ').grid(row=0, column=0, sticky='NE')
 ttk.Label(fDevTrack, text='RSSI: ').grid(row=1, column=0, sticky='SE')
 
+### Device List Read Frame ###
+CurTrackID_Dev = ttk.Label(fDevRead, text="").grid(row=0, column=0, sticky='WE')
+
 ### Device List Button Frame ###
 Dev_HomeBtn = ttk.Button(fDevButton, text='Home', command=lambda:raise_frame(HomePage))
 Dev_SweepBtn = ttk.Button(fDevButton, text='Sweep', command=lambda:raise_frame(Sweep))
@@ -365,7 +392,7 @@ sBarDev.grid(row=0, column=0, sticky='NS')
 Dev_StopBtn = ttk.Button(fDevData, text='Stop Track',
                          command=lambda:clear_ID())
 Dev_TrackBtn = ttk.Button(fDevData, text='Track',
-                          command=lambda:track_ID())
+                          command=lambda:track_pressed())
 
 nameLabel = ttk.Label(fDevData, text='Name: '+devUName)
 sexLabel = ttk.Label(fDevData, text='Sex: '+devUSex)
@@ -379,6 +406,8 @@ dateLabel.grid(row=4, column=0, sticky='W')
 
 Dev_StopBtn.grid(row=0, column=1, sticky='SW', padx=wPadX,)
 Dev_TrackBtn.grid(row=0, column=1, sticky='NWE', padx=wPadX,)
+
+#win.after(500, tracking_check())
 
 
             ###############   Settings Page   ###############
@@ -449,8 +478,3 @@ tBoxSet.grid(row=0, column=0)
 ### Start on Home Page ###
 raise_frame(HomePage)
 win.mainloop()
-
-if refreshFlag == True:
-    after(250, track_ID())
-else:
-    clear_ID()
