@@ -74,6 +74,15 @@ def track_ID():
     RSSIread = RSSI_file.readline()
     RSSI_file.close()
     
+    RSSILength = len(RSSIread)
+    if(RSSILength == 2)
+        newLength = RSSILength+1
+        RSSIread = RSSIread.ljust(newLength)
+    elif(RSSILength == 1)
+        newLength = RSSILength+2
+        RSSIread = RSSIread.ljust(newLength)
+        
+    
     print('Opening activeDevID file')
     #actDevID_file = open('/mnt/GUI/active')
     actDevID_file = open('/home/pi/Documents/SARNet/GUI/activeDevID', 'w')
