@@ -59,11 +59,17 @@ def sweep_End():
     sweepFlagEnd.close()
     print('Close sweepFlag')
 
+def tracking_check():
+    if TrackingFlag == 1:
+        after(500, track_ID)
+    elif TrackFlag == 0:
+        pass
+    
 def track_ID():
-
+    TrackingFlag = 1
     #devIDMain = DevList.curselection()
     #CurTrackID_Home = Label(HomePage, text=devIDMain).grid(row=0, column=1, sticky='W')
-
+    
     devIDMain = DevList.get(DevList.curselection())
     print('Selecting Dev ID')
     
@@ -75,10 +81,10 @@ def track_ID():
     RSSI_file.close()
     
     RSSILength = len(RSSIread)
-    if(RSSILength == 2)
+    if RSSILength == 2:
         newLength = RSSILength+1
         RSSIread = RSSIread.ljust(newLength)
-    elif(RSSILength == 1)
+    elif RSSILength == 1:
         newLength = RSSILength+2
         RSSIread = RSSIread.ljust(newLength)
         
@@ -108,6 +114,7 @@ def track_ID():
 """
 
 def clear_ID():
+    TrackingFlag = 1
     CurTrackID_Home.configure(text='   ')
     CurTrackID_Dev.configure(text='   ')
     CurRSSI_Home.configure(text='    ')
