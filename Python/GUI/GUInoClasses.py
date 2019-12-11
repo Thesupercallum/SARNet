@@ -71,19 +71,22 @@ def track_pressed():
     devIDMain = DevList.get(DevList.curselection())
     devIDMain = devIDMain[:-1]
     print('devIDMain Value: ',devIDMain)   
+    RSSI_first = open('/home/pi/Documents/SARNet/GUI/RSSIuser_'+devIDMain+'.txt')
+    RSSI_first.write('0')
+    RSSI_file.close()
     track_ID(devIDMain)
 
 def tracking_check():
     print('Cleared is: ', Cleared)
     if Cleared == 1:
-        CurTrackID_Home = ttk.Label(fHomeRead, text='--   ').grid(row=0, column=1, sticky='WE')
-        CurTrackID_Swp = ttk.Label(fSwpRead, text='--   ').grid(row=0, column=0, sticky='WE')    
-        CurTrackID_Dev = ttk.Label(fDevRead, text='--   ').grid(row=0, column=0, sticky='WE')
-        CurTrackID_Set = ttk.Label(fSetRead, text='--   ').grid(row=0, column=0, sticky='WE')
-        CurRSSI_Home = ttk.Label(fHomeRead, text='--   ').grid(row=1, column=1, sticky='SE')
-        CurRSSI_Swp = ttk.Label(fSwpRead, text='--   ').grid(row=1, column=0, sticky='W')
-        CurRSSI_Dev = ttk.Label(fDevRead, text='--   ').grid(row=1, column=0, sticky='W')
-        CurRSSI_Set = ttk.Label(fSetRead, text='--   ').grid(row=1, column=0, sticky='W')
+        CurTrackID_Home = ttk.Label(fHomeRead, text=' --     ').grid(row=0, column=1, sticky='WE')
+        CurTrackID_Swp = ttk.Label(fSwpRead, text=' --     ').grid(row=0, column=0, sticky='WE')    
+        CurTrackID_Dev = ttk.Label(fDevRead, text=' --     ').grid(row=0, column=0, sticky='WE')
+        CurTrackID_Set = ttk.Label(fSetRead, text=' --     ').grid(row=0, column=0, sticky='WE')
+        CurRSSI_Home = ttk.Label(fHomeRead, text=' --     ').grid(row=1, column=1, sticky='SE')
+        CurRSSI_Swp = ttk.Label(fSwpRead, text=' --     ').grid(row=1, column=0, sticky='W')
+        CurRSSI_Dev = ttk.Label(fDevRead, text=' --     ').grid(row=1, column=0, sticky='W')
+        CurRSSI_Set = ttk.Label(fSetRead, text=' --     ').grid(row=1, column=0, sticky='W')
     else:
         track_ID(devIDMain)
 
@@ -142,7 +145,7 @@ def track_ID(devIDMain):
     CurRSSI_Dev = Label(fDevRead, text=RSSI_read).grid(row=1, column=1, sticky='W')
     """
     #win.after(100, tracking_check)
-    win.after(100, tracking_check)
+    win.after(500, tracking_check)
 
     #print('End of track_ID: ',TrackingFlag)
 
