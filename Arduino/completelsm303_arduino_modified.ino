@@ -1,4 +1,4 @@
-/*
+/*  PROGRAM CREATED BY ADAFRUIT Foundation
  *  This is a single sketch for tilt compensated compass using an LSM303DLHC.
  *  It does not use any libraries, other than wire, because I found a number of
  *  errors in libraries that are out there.The biggest problem is with libraries
@@ -188,6 +188,6 @@ void loop() {
   //Serial.println("Heading: "); 
   Serial.println(Heading);
  
-  delay(250);
+  delay(250); // SARNet changed this to be faster. Thats the only modification to the original file
  
 }
