@@ -31,13 +31,13 @@
 
 bool DistressState = 0;
 bool AlarmState = 0;
-bool LimpState = 0;
+bool LimpState = 0;               //Variables used to see the mode the cricket is in.
 bool Wake_Flag = false;
 
 
 int DeviceID = Address;
 int Mode = 0;
-int y = 0;
+int y = 0;                    //Global variables defined.
 int z = 1;
 int count = 0;
 
@@ -53,13 +53,13 @@ LoRaRadio.begin(915000000);
 LoRaRadio.setFrequency(915000000);
 LoRaRadio.setTxPower(20);
 LoRaRadio.setBandwidth(LoRaRadio.BW_125);
-LoRaRadio.setSpreadingFactor(LoRaRadio.SF_7);
-LoRaRadio.setCodingRate(LoRaRadio.CR_4_5);
+LoRaRadio.setSpreadingFactor(LoRaRadio.SF_7);         //Setup LoRa settings.
+LoRaRadio.setCodingRate(LoRaRadio.CR_4_8);
 LoRaRadio.setLnaBoost(true);
 
 pinMode(SW1, INPUT);
 pinMode(SW2, INPUT);
-pinMode(32, INPUT);
+pinMode(32, INPUT);                         //Set inputs and outputs.
 
 pinMode(RLED, OUTPUT);
 pinMode(GLED, OUTPUT);
@@ -67,7 +67,7 @@ pinMode(GLED, OUTPUT);
 digitalWrite (RLED, LOW);
 digitalWrite (GLED, LOW);
 
-attachInterrupt(SW1, WakeyWakey, RISING);
+attachInterrupt(SW1, WakeyWakey, RISING);   //Attach an iterrupt flag to the two buttons.
 attachInterrupt(SW2, WakeyWakey, RISING);
   
 
@@ -75,16 +75,15 @@ attachInterrupt(SW2, WakeyWakey, RISING);
 
 void loop() 
 {
-ButtonCheck();
-//BatteryCheck();
+ButtonCheck();        //Checks for user button activity.
 if(Wake_Flag == true)
 {
-  Wake_Flag = false;
+  Wake_Flag = false;                          //Interrupt function to wake up from sleep on button press.
   attachInterrupt(SW1, WakeyWakey, RISING);
   attachInterrupt(SW2, WakeyWakey, RISING);
 }
 
-switch (Mode)
+switch (Mode)         //Switch statement to determine what function to run based on the mode the cricket is in.
 {
   case Normal:
     NormalMode();
@@ -94,9 +93,6 @@ switch (Mode)
     break;
   case Alarm:
     AlarmMode();
-    break;
-  case Limp:
-    LimpMode();
     break;
   default:
     break;
@@ -123,79 +119,52 @@ void DistressMode ()      //Function that is entered in to by user of cricket to
   STM32L0.stop(60000);
 }
 
-void AlarmMode()          //Function that is entered in to by a Bat module communicating with Cricket. Cricket will sleep for 10 seconds then wake up, send its packet and go back to sleep.
-{
-  Serial.print("Mode = Alarm");
-  if(z == 1)
-  {
-    digitalWrite(GLED, HIGH);
-    z = 0;
-  }
-  else
-  {
-    digitalWrite(RLED, HIGH);
-    z = 1;
-  }
-  BuildPacket();
-  digitalWrite(GLED, LOW);
-  digitalWrite(RLED, LOW); 
-  STM32L0.stop(10000);
-}
-
-void LimpMode()           //Function that is entered in to when the crickets battery liufe drops below a certain level. Cricket will sleep for 10 minutes then wake up, send its packet and go back to sleep.
-{
-  
-  Serial.print("Mode = Limp");
-  digitalWrite(RLED, HIGH);
+void AlarmMode()          //Function that is entered in to by a Bat module communicating with Cricket.                           
+{                         //Cricket will sleep for 10 seconds then wake up, send its packet and go back to sleep.
   digitalWrite(GLED, HIGH);
+  digitalWrite(RLED, HIGH);
   BuildPacket();
-  delay(100);
-  digitalWrite(RLED, LOW);
   digitalWrite(GLED, LOW);
-  STM32L0.stop(600000);
-}
-
-void BatteryCheck()       //Function that checks the battery level of the Cricket.
-{
-// if(Vbat < 2.6)
-// {
-//  Mode = Limp;
-//  LimpState = true;
-// }
- 
+  digitalWrite(RLED, LOW);
+  delay(100);
+  digitalWrite(GLED, HIGH);
+  digitalWrite(RLED, HIGH);
+  delay(100);
+  digitalWrite(GLED, LOW);
+  digitalWrite(RLED, LOW);
+  delay(100);
+  digitalWrite(GLED, HIGH);
+  digitalWrite(RLED, HIGH);
+  delay(100);
+  digitalWrite(GLED, LOW);
+  digitalWrite(RLED, LOW);
+  STM32L0.stop(10000);
 }
 
 void BuildPacket()        //Function that builds the packet to be sent by the Cricket.
 {
-  char SendingPacket[3];
+  char SendingPacket[4];
+  SendingPacket[0] = '*';
   switch(DeviceID)                //Checks device ID being used and inputs the correct values in position 0 and 1 of our packet array.
   {
     case 0:
-      SendingPacket[0] = '0';
       SendingPacket[1] = '0';
+      SendingPacket[2] = '0';
       break;
     case 1:
-      SendingPacket[0] = '0';
-      SendingPacket[1] = '1';
+      SendingPacket[1] = '0';
+      SendingPacket[2] = '1';
       break;
     case 2:
-      SendingPacket[0] = '1';
-      SendingPacket[1] = '0';
+      SendingPacket[1] = '1';
+      SendingPacket[2] = '0';
       break;
     case 3:
-      SendingPacket[0] = '1';
       SendingPacket[1] = '1';
+      SendingPacket[2] = '1';
       break;
   }
   if(AlarmState == 1)              //Checks the status of the LimpState variable and appends the packet to indicate if its in this state or not.
-  {
-    SendingPacket[2] = '1';
-  }
-  else
-  {
-    SendingPacket[2] = '0';
-  }
-  if(DistressState == 1)          //Checks the status of the DistressState variable and appends the packet to indicate if its in this state or not.
   {
     SendingPacket[3] = '1';
   }
@@ -203,68 +172,68 @@ void BuildPacket()        //Function that builds the packet to be sent by the Cr
   {
     SendingPacket[3] = '0';
   }
-  Serial.print("Built Packet: ");
-  Serial.println(SendingPacket);
+  if(DistressState == 1)          //Checks the status of the DistressState variable and appends the packet to indicate if its in this state or not.
+  {
+    SendingPacket[4] = '1';
+  }
+  else
+  {
+    SendingPacket[4] = '0';
+  }
+  
   SendPacket(SendingPacket);
 }
 
 void SendPacket(char SendingPacket[])         //Function that sends the built packet out through LoRa.
 {
   LoRaRadio.beginPacket();
-  for(int i = 0; i < 4; i++)
+  for(int i = 0; i < 5; i++)
   {
     LoRaRadio.write(SendingPacket[i]);        //Sends each character individually of the packet array.
   }
   LoRaRadio.endPacket(true);
   delay(100);
-  LoRaRadio.receive(1000);  //Listens for a response for a Bat.
-
-
-  
   LoRaRadio.receive(1000); 
-  if(LoRaRadio.parsePacket() == 1 && LoRaRadio.read() == 'A')         //Changes to Alarm mode if it hears from a Bat.
+  LoRaRadio.parsePacket();     //Listens for a response for a Bat.
+  if(LoRaRadio.read() == 'A' & AlarmState == 0)         //Changes to Alarm mode if it hears from a Bat.
   {
     Mode = Alarm;
-    AlarmState = true;
+    AlarmState = 1;
   }
-  else
-  {
-   
-  }
-
-  
 }
 
 void ButtonCheck()
 {
-  while(digitalRead(SW1) == 1)
-  {
-    digitalWrite(GLED, HIGH); 
-  }
-  digitalWrite(GLED, LOW);
-  if(digitalRead(SW2) == 1 && y == 0)
+  if(digitalRead(SW2) == 1)
   {
     SW2presstime = millis();
     aftertime = SW2presstime + 5000;
-    y = 1;
   }
-  while(digitalRead(SW2) == 1)
+  while(digitalRead(SW2) == 1)        //Checks if right button has been held down for 5 seconds then lights up red LED.
   {
-    if(digitalRead(SW1) == 1 && millis() > aftertime)
+    if(millis() > aftertime)
     {
-      count = count + 1;
-      delay(500);
-    }
-    if(count == 3)
-    {
-      Mode = Distress;
-      DistressState = true;
-      count = 0;
-    }
+      digitalWrite(RLED, HIGH);
+      if(digitalRead(SW1) == 1)
+      {
+        count = count + 1;
+        delay(500);
+      }
+      if(count == 3)
+      {
+        if(Mode != Alarm)
+        {
+          Mode = Distress;
+          DistressState = true;       //If the left button is pressed 3 times while the right is still held down it will put the cricket in distress mode.
+        }    
+        count = 0;
+      }
+    } 
   }
+  digitalWrite(RLED, LOW);
 }
 
-void WakeyWakey()
+void WakeyWakey()                       //Button interrupt function.
 {
   Wake_Flag = true;
   STM32L0.wakeup();
