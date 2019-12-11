@@ -465,13 +465,13 @@ Set_restartSweep = ttk.Button(fSetData, text='Restart Sweep',
 Set_reboot = ttk.Button(fSetData, text='Reboot',
                         command=lambda:reboot_pi())
 
-Set_blLabel.grid()
-Set_blSlider.grid()
-Set_darkTheme.grid()
-Set_lightTheme.grid()
-Set_restartComp.grid()
-Set_restartSweep.grid()
-Set_reboot.grid()
+Set_blLabel.pack(pady=btnPadY, padx=wPadX, fill='x')
+Set_blSlider.pack(pady=1, padx=1, fill='x')
+Set_darkTheme.pack(pady=btnPadY, padx=wPadX, fill='x')
+Set_lightTheme.pack(pady=btnPadY, padx=wPadX, fill='x')
+Set_restartComp.pack(pady=btnPadY, padx=wPadX, fill='x')
+Set_restartSweep.pack(pady=btnPadY, padx=wPadX, fill='x')
+Set_reboot.pack(pady=btnPadY, padx=wPadX, fill='x')
 
 
 #fSetData.after(50, update_slider())
