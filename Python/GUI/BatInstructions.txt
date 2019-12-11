@@ -1,4 +1,26 @@
 ﻿		Using the Bat
 
-The Bat is SARNet’s handheld tracking device isused to locate Cricket(s) of interest. The Bat is equipped with a DF antenna to orientate the user towards the direction of the Cricket’s    signal source.
+The Bat is SARNet’s handheld tracking device isused to locate Cricket(s) of interest. The Bat is equipped with a DF antenna to orientate the user towards the direction of the Cricket’s signal source. 
 
+Tracking is used to get a live indication of the direction of a Cricket being tracked.
+
+Trakcing:
+Step 1. Navagate to the device list page by pressing the Device List button the the left hand side of the screen.
+Step 2. Select a Cricket ID to track form the List on the page and hit the Track button to the right.
+Step 3. Take note of the ID being tacked and the RSSI in the top left corner of the screen.
+Step 4. Use the graphic in the bottom right corner of the screen to visually see the strength of the received signal. The arrow grows larger the closer you are to the Cricket.
+Step 5. Click Stop Tracking when you are done looking for a cricket and before tracking any other Cricket.
+
+
+Sweeping periodically while tracking a Cricket can be helpful to reorient the direction you need to head in.
+
+Sweeping:
+Step 1. Click the Sweep button on the left hand side of the screen.
+Step 2. Click Begin Sweep and a new graphic will be launched in the bottom right hand corner of the screen.
+Step 3. Slowly turn in a circle, a new signal strength indicator will be placed every 5 seconds.
+Step 4. Review the graphic created, the direction with the largest amplitude line is the direction of the Cricket.
+Step 5. Hit End Sweep to clear the graphic and go back to normal tracking mode.
+
+Settings such as screen brightness, resetting stuck  modules, and other settings can be changed by navigating to the settings page by clicking on the Settings button on the left hand side of the screen.
+
+Home button can be clicked at any time to return to this page with instructions.
